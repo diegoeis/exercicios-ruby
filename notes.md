@@ -63,5 +63,66 @@ end
     - load 'conta.rb' - carrega as alterações modificadas
 - Ler e estudar: polimorfismo, encapsulamento e herança. Três coisas importantes na Orientação a Objetos.
 
-### Arrays(Listas)[]
+### Metaprogramação
+- Classes são objetos. Mas você já sabe disso.
 
+```ruby
+Fixnum.class
+# => Class
+
+class Pessoa
+end
+
+def Pessoa.andar
+    puts "vai!"
+end
+```
+
+- A sua classe é uma objeto que é referenciado por uma constante.
+- Por isso, quando declaramos uma classe, o self. é um métod ode classe, que está refernciado ele mesmo ali dentro da função.
+
+### Trabalhando com coleções - Map & Reduce
+
+```ruby
+class Banco
+    def saldo_total
+        total=0
+        @contas.each do |conta|
+            total += conta.saldo
+        end
+        total
+    end
+end
+
+# Melhor. Igual ao de cima
+class Banco
+    def saldo_total
+        valores @contas.map {|c| c.saldo}
+        valores.reduce(:+)
+    end
+end
+```
+
+- O map percorre sua coleção e retorna um novo valor. Ele devolve uma nova coleção, com os objetos qu retornar no `c.saldo`.
+- o reduce é um método de coleções, onde o :+ é um símbolo. Ele vai pegar o valor atual e vai chamar um método `+`, junto com o valor acumulado anterior.
+
+### Enviando mensagens aos objetos
+- A Orientação Objeto costuma que métodos são trocas de mensagens.
+- O Object tem um método `send` que envia informações para o reduce.
+
+### Blocos
+
+```ruby
+class Banco
+    def each
+        @contas.each do |conta|
+            yield conta.nome, conta.saldo
+        end
+    end
+end
+
+banco = Banco.new(contas)
+banco.each do |n,s|
+    puts "#{n} #{s}"
+end
+```
